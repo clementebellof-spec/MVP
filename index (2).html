@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rohco Pucón · Muebles Artesanales</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   RESET & ROOT
+============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --cream:     #F7F3EE;
+  --warm:      #F0E8DC;
+  --bark:      #1C1410;
+  --bark-mid:  #2C1F14;
+  --wood:      #8B5A2B;
+  --wood-light:#C49A6C;
+  --muted:     #6B5344;
+  --border:    rgba(139,90,43,0.18);
+}
+html { scroll-behavior: smooth; overflow-x: hidden; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bark);
+  color: var(--cream);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ============================================================
+   CUSTOM CURSOR
+============================================================ */
+#cursor {
+  position: fixed; width: 12px; height: 12px;
+  background: var(--wood); border-radius: 50%;
+  pointer-events: none; z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s;
+  mix-blend-mode: normal;
+}
+#cursor-ring {
+  position: fixed; width: 40px; height: 40px;
+  border: 1px solid rgba(139,90,43,0.6); border-radius: 50%;
+  pointer-events: none; z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: transform 0.12s ease, width 0.3s, height 0.3s, border-color 0.3s;
+}
+body.hovering #cursor { width: 8px; height: 8px; background: var(--wood-light); }
+body.hovering #cursor-ring { width: 60px; height: 60px; border-color: var(--wood); }
+
+/* ============================================================
+   LOADER
+============================================================ */
+#loader {
+  position: fixed; inset: 0; background: var(--bark);
+  z-index: 9000; display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 2rem;
+}
+.loader-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 300; letter-spacing: 0.12em;
+  color: var(--cream); overflow: hidden;
+}
+.loader-logo span { color: var(--wood); font-style: italic; }
+.loader-line {
+  width: 0; height: 1px; background: var(--wood);
+  animation: loaderLine 2s ease forwards;
+}
+.loader-sub {
+  font-size: 0.72rem; letter-spacing: 0.3em; text-transform: uppercase;
+  color: rgba(247,243,238,0.35);
+  animation: fadeIn 1s 0.5s ease both;
+}
+@keyframes loaderLine { to { width: 200px; } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+#loader.hide {
+  animation: loaderOut 0.8s ease forwards;
+}
+@keyframes loaderOut {
+  to { opacity: 0; pointer-events: none; }
+}
+
+/* ============================================================
+   GRAIN OVERLAY
+============================================================ */
+#grain {
+  position: fixed; inset: 0; z-index: 8000;
+  pointer-events: none; opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  background-size: 200px;
+}
+
+/* ============================================================
+   NAVIGATION
+============================================================ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.4rem 4rem;
+  background: transparent;
+  transition: background 0.4s, padding 0.4s, border-bottom 0.4s;
+}
+nav.scrolled {
+  background: rgba(28,20,16,0.95);
+  backdrop-filter: blur(16px);
+  padding: 1rem 4rem;
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.4rem; font-weight: 300; letter-spacing: 0.1em;
+  color: var(--cream); text-decoration: none;
+  transition: opacity 0.3s;
+}
+.nav-logo span { color: var(--wood); font-style: italic; }
+.nav-links { display: flex; gap: 2.5rem; list-style: none; align-items: center; }
+.nav-links a {
+  font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: rgba(247,243,238,0.7); text-decoration: none;
+  transition: color 0.2s; position: relative;
+}
+.nav-links a::after {
+  content: ''; position: absolute; bottom: -3px; left: 0; width: 0; height: 1px;
+  background: var(--wood); transition: width 0.3s ease;
+}
+.nav-links a:hover { color: var(--cream); }
+.nav-links a:hover::after { width: 100%; }
+.nav-cta {
+  background: var(--wood) !important; color: var(--cream) !important;
+  padding: 0.6rem 1.4rem; transition: background 0.2s !important;
+}
+.nav-cta:hover { background: var(--wood-light) !important; }
+.nav-cta::after { display: none !important; }
+
+/* hamburger */
+.hamburger {
+  display: none; flex-direction: column; gap: 5px;
+  background: none; border: none; cursor: none; padding: 4px;
+}
+.hamburger span {
+  display: block; width: 24px; height: 1px; background: var(--cream);
+  transition: transform 0.3s, opacity 0.3s;
+}
+.hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+/* mobile menu */
+.mobile-menu {
+  display: none; position: fixed; inset: 0; z-index: 490;
+  background: var(--bark-mid); flex-direction: column;
+  align-items: center; justify-content: center; gap: 2.5rem;
+  opacity: 0; pointer-events: none; transition: opacity 0.4s;
+}
+.mobile-menu.open { opacity: 1; pointer-events: all; display: flex; }
+.mobile-menu a {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2rem, 6vw, 3.5rem); font-weight: 300;
+  color: var(--cream); text-decoration: none;
+  font-style: italic; transition: color 0.2s;
+}
+.mobile-menu a:hover { color: var(--wood); }
+
+/* ============================================================
+   HERO
+============================================================ */
+.hero {
+  min-height: 100vh; position: relative;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  overflow: hidden;
+}
+
+/* animated wood grain background canvas */
+#hero-canvas {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  opacity: 0.18;
+}
+
+.hero-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 70% 40%, rgba(139,90,43,0.25) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 80% at 20% 80%, rgba(44,31,20,0.6) 0%, transparent 70%),
+    var(--bark);
+}
+
+.hero-img-mosaic {
+  position: absolute; inset: 0;
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr; gap: 2px; opacity: 0;
+  animation: heroImgIn 1.2s 2.2s ease forwards;
+}
+@keyframes heroImgIn { to { opacity: 0.22; } }
+
+.mosaic-cell {
+  background-size: cover; background-position: center;
+  filter: saturate(0.4) sepia(0.3);
+}
+.mosaic-cell:nth-child(1) { background-image: url('https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&q=60'); }
+.mosaic-cell:nth-child(2) { background-image: url('https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?w=600&q=60'); }
+.mosaic-cell:nth-child(3) { background-image: url('https://images.unsplash.com/photo-1538688525198-9b88f6f53126?w=600&q=60'); }
+.mosaic-cell:nth-child(4) { background-image: url('https://images.unsplash.com/photo-1489171078254-c3365d6e359f?w=600&q=60'); }
+.mosaic-cell:nth-child(5) { background-image: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=60'); }
+.mosaic-cell:nth-child(6) { background-image: url('https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&q=60'); }
+
+.hero-content {
+  position: relative; z-index: 2;
+  padding: 0 5rem 5rem;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: flex-end;
+}
+
+.hero-left { display: flex; flex-direction: column; gap: 0; }
+
+.hero-tag {
+  font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--wood); margin-bottom: 1.5rem;
+  display: flex; align-items: center; gap: 1rem;
+  opacity: 0; animation: slideUp 0.7s 2.4s ease forwards;
+}
+.hero-tag::before { content: ''; width: 2.5rem; height: 1px; background: var(--wood); }
+
+.hero-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(3.5rem, 7vw, 7rem);
+  font-weight: 300; line-height: 0.95;
+  color: var(--cream); overflow: hidden;
+}
+.hero-title .line {
+  display: block; overflow: hidden;
+}
+.hero-title .line span {
+  display: block;
+  transform: translateY(110%);
+  animation: lineUp 0.9s ease forwards;
+}
+.hero-title .line:nth-child(1) span { animation-delay: 2.5s; }
+.hero-title .line:nth-child(2) span { animation-delay: 2.65s; }
+.hero-title .line:nth-child(3) span { animation-delay: 2.8s; }
+.hero-title em { color: var(--wood); font-style: italic; }
+
+@keyframes lineUp { to { transform: translateY(0); } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+.hero-right {
+  display: flex; flex-direction: column; gap: 2rem;
+  padding-bottom: 0.5rem;
+  opacity: 0; animation: slideUp 0.8s 3s ease forwards;
+}
+.hero-desc {
+  font-size: 1rem; color: rgba(247,243,238,0.65);
+  line-height: 1.75; font-weight: 300; max-width: 38ch;
+}
+.hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+.btn-primary {
+  background: var(--wood); color: var(--cream);
+  padding: 1rem 2.2rem; border: none; font-family: 'DM Sans', sans-serif;
+  font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase;
+  cursor: none; position: relative; overflow: hidden;
+  transition: transform 0.2s;
+}
+.btn-primary::before {
+  content: ''; position: absolute; inset: 0;
+  background: var(--wood-light);
+  transform: translateX(-101%);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.btn-primary:hover::before { transform: translateX(0); }
+.btn-primary span { position: relative; z-index: 1; }
+.btn-primary:hover { transform: translateY(-2px); }
+
+.btn-outline {
+  background: transparent; color: var(--cream);
+  padding: 1rem 2.2rem; border: 1px solid rgba(247,243,238,0.25);
+  font-family: 'DM Sans', sans-serif; font-size: 0.8rem;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  cursor: none; transition: border-color 0.3s, color 0.3s, transform 0.2s;
+}
+.btn-outline:hover {
+  border-color: var(--wood); color: var(--wood);
+  transform: translateY(-2px);
+}
+
+.hero-stats {
+  display: flex; gap: 3rem; padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+.stat { text-align: left; }
+.stat-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.5rem; font-weight: 300; color: var(--cream);
+  display: block; line-height: 1;
+}
+.stat-label {
+  font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--wood); margin-top: 0.4rem; display: block;
+}
+
+/* scroll indicator */
+.scroll-hint {
+  position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 0.6rem;
+  opacity: 0; animation: fadeIn 1s 3.5s ease forwards; z-index: 2;
+}
+.scroll-hint span {
+  font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: rgba(247,243,238,0.35);
+}
+.scroll-line {
+  width: 1px; height: 50px; background: linear-gradient(to bottom, var(--wood), transparent);
+  animation: scrollPulse 1.5s ease-in-out infinite;
+}
+@keyframes scrollPulse {
+  0%, 100% { transform: scaleY(1); opacity: 1; }
+  50% { transform: scaleY(0.5); opacity: 0.4; }
+}
+
+/* ============================================================
+   MARQUEE STRIP
+============================================================ */
+.marquee-wrap {
+  background: var(--wood); padding: 1rem 0; overflow: hidden;
+  position: relative; z-index: 2;
+}
+.marquee-track {
+  display: flex; gap: 0; white-space: nowrap;
+  animation: marquee 25s linear infinite;
+  width: max-content;
+}
+.marquee-track:hover { animation-play-state: paused; }
+.marquee-item {
+  display: inline-flex; align-items: center; gap: 1.5rem;
+  padding: 0 2rem; font-size: 0.72rem; letter-spacing: 0.18em;
+  text-transform: uppercase; color: rgba(247,243,238,0.9);
+}
+.marquee-dot { width: 4px; height: 4px; background: rgba(247,243,238,0.5); border-radius: 50%; }
+@keyframes marquee { to { transform: translateX(-50%); } }
+
+/* ============================================================
+   SECTIONS COMMON
+============================================================ */
+section { padding: 8rem 5rem; }
+
+.reveal {
+  opacity: 0; transform: translateY(40px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-left {
+  opacity: 0; transform: translateX(-40px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.reveal-left.visible { opacity: 1; transform: translateX(0); }
+.reveal-right {
+  opacity: 0; transform: translateX(40px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.reveal-right.visible { opacity: 1; transform: translateX(0); }
+
+.section-tag {
+  font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--wood); margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 1rem;
+}
+.section-tag::before { content: ''; width: 2rem; height: 1px; background: var(--wood); }
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.2rem, 4vw, 3.5rem); font-weight: 300;
+  line-height: 1.1; color: var(--cream); margin-bottom: 1.5rem;
+}
+.section-title em { color: var(--wood); font-style: italic; }
+
+/* ============================================================
+   ABOUT / STORY
+============================================================ */
+.about {
+  background: var(--bark-mid);
+  display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center;
+}
+.about-images {
+  position: relative; aspect-ratio: 4/5;
+}
+.about-img-main {
+  width: 75%; aspect-ratio: 3/4; object-fit: cover;
+  background-image: url('https://images.unsplash.com/photo-1538688525198-9b88f6f53126?w=700&q=80');
+  background-size: cover; background-position: center;
+  transition: transform 0.6s ease;
+}
+.about-img-main:hover { transform: scale(1.02); }
+
+.about-img-accent {
+  position: absolute; right: 0; bottom: 0;
+  width: 55%; aspect-ratio: 1;
+  background-image: url('https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&q=80');
+  background-size: cover; background-position: center;
+  border: 5px solid var(--bark-mid);
+  transition: transform 0.6s ease;
+}
+.about-img-accent:hover { transform: scale(1.03); }
+
+.about-badge {
+  position: absolute; top: 2rem; right: 3rem;
+  background: var(--wood); padding: 1.2rem 1.5rem;
+  font-family: 'Cormorant Garamond', serif;
+}
+.about-badge-num {
+  font-size: 2.5rem; font-weight: 300; color: var(--cream);
+  display: block; line-height: 1;
+}
+.about-badge-label {
+  font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;
+  color: rgba(247,243,238,0.7); margin-top: 0.3rem; display: block;
+}
+
+.about-body {
+  font-size: 1rem; color: rgba(247,243,238,0.65);
+  line-height: 1.85; font-weight: 300; margin-bottom: 2.5rem;
+}
+.about-body strong { color: var(--cream); font-weight: 400; }
+
+.about-features { display: flex; flex-direction: column; gap: 0; }
+.feature {
+  display: flex; align-items: flex-start; gap: 1.2rem;
+  padding: 1.2rem 0; border-bottom: 1px solid var(--border);
+  transition: padding-left 0.3s ease;
+}
+.feature:first-child { border-top: 1px solid var(--border); }
+.feature:hover { padding-left: 0.5rem; }
+.feature-icon {
+  width: 2.2rem; height: 2.2rem; border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  transition: background 0.3s, border-color 0.3s;
+}
+.feature:hover .feature-icon { background: var(--wood); border-color: var(--wood); }
+.feature-icon svg {
+  width: 14px; height: 14px; stroke: var(--wood); fill: none; stroke-width: 1.5;
+  transition: stroke 0.3s;
+}
+.feature:hover .feature-icon svg { stroke: var(--cream); }
+.feature-title { font-size: 0.9rem; font-weight: 400; color: var(--cream); margin-bottom: 0.2rem; }
+.feature-desc { font-size: 0.83rem; color: rgba(247,243,238,0.5); line-height: 1.5; }
+
+/* ============================================================
+   CATEGORIES
+============================================================ */
+.categories { background: var(--bark); }
+.cat-header {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  margin-bottom: 3rem;
+}
+.view-all {
+  font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--wood); text-decoration: none; border-bottom: 1px solid var(--border);
+  padding-bottom: 0.3rem; transition: border-color 0.3s, color 0.3s;
+}
+.view-all:hover { color: var(--wood-light); border-color: var(--wood-light); }
+
+.cat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto auto;
+  gap: 1.5px;
+}
+.cat-card {
+  position: relative; overflow: hidden; cursor: none;
+  background: var(--bark-mid);
+}
+.cat-card:nth-child(1) { grid-column: 1 / 3; aspect-ratio: 16/8; }
+.cat-card:nth-child(2) { aspect-ratio: 3/4; }
+.cat-card:nth-child(3) { aspect-ratio: 3/4; }
+.cat-card:nth-child(4) { aspect-ratio: 3/4; }
+.cat-card:nth-child(5) { grid-column: 2 / 4; aspect-ratio: 16/8; }
+
+.cat-bg {
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center;
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), filter 0.6s ease;
+  filter: saturate(0.7) brightness(0.75);
+}
+.cat-card:hover .cat-bg {
+  transform: scale(1.08);
+  filter: saturate(0.9) brightness(0.6);
+}
+
+.cat-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(28,20,16,0.9) 0%, rgba(28,20,16,0.1) 60%, transparent 100%);
+  transition: background 0.4s ease;
+}
+.cat-card:hover .cat-overlay {
+  background: linear-gradient(to top, rgba(28,20,16,0.95) 0%, rgba(28,20,16,0.3) 60%, rgba(139,90,43,0.1) 100%);
+}
+
+.cat-content {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 2rem; transform: translateY(0.5rem);
+  transition: transform 0.4s ease;
+}
+.cat-card:hover .cat-content { transform: translateY(0); }
+
+.cat-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.4rem, 2.5vw, 2rem); font-weight: 300;
+  color: var(--cream); margin-bottom: 0.3rem;
+}
+.cat-count {
+  font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: rgba(247,243,238,0.45); transition: color 0.3s;
+}
+.cat-card:hover .cat-count { color: var(--wood); }
+
+.cat-arrow {
+  position: absolute; top: 1.5rem; right: 1.5rem;
+  width: 2.5rem; height: 2.5rem; border: 1px solid rgba(247,243,238,0.25);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transform: translate(4px, -4px);
+  transition: opacity 0.3s, transform 0.3s, background 0.3s;
+}
+.cat-card:hover .cat-arrow {
+  opacity: 1; transform: translate(0, 0);
+  background: var(--wood); border-color: var(--wood);
+}
+.cat-arrow svg { width: 12px; height: 12px; stroke: var(--cream); fill: none; stroke-width: 2; }
+
+/* ============================================================
+   3D CARD SECTION / FEATURED
+============================================================ */
+.featured {
+  background: var(--warm);
+  padding: 8rem 5rem;
+}
+.featured .section-title,
+.featured .section-tag { color: var(--bark); }
+.featured .section-tag { color: var(--wood); }
+.featured .section-tag::before { background: var(--wood); }
+
+.cards-3d {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;
+  margin-top: 3.5rem; perspective: 1000px;
+}
+.card-3d {
+  background: white; padding: 2.5rem;
+  border: 1px solid rgba(139,90,43,0.12);
+  cursor: none; position: relative; overflow: hidden;
+  transform-style: preserve-3d;
+  transition: box-shadow 0.3s;
+}
+.card-3d::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(139,90,43,0.06) 0%, transparent 60%);
+  opacity: 0; transition: opacity 0.4s;
+}
+.card-3d:hover::before { opacity: 1; }
+.card-3d:hover {
+  box-shadow: 0 20px 60px rgba(139,90,43,0.15);
+}
+
+.card-3d-img {
+  width: 100%; aspect-ratio: 4/3;
+  background-size: cover; background-position: center;
+  margin-bottom: 1.5rem; overflow: hidden;
+  transition: transform 0.6s ease;
+}
+.card-3d:hover .card-3d-img { transform: scale(1.04); }
+.card-3d-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.85rem; font-style: italic; color: var(--wood);
+  margin-bottom: 0.6rem; display: block;
+}
+.card-3d-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem; font-weight: 300; color: var(--bark);
+  margin-bottom: 0.6rem;
+}
+.card-3d-desc {
+  font-size: 0.85rem; color: var(--muted); line-height: 1.6; font-weight: 300;
+}
+.card-3d-line {
+  position: absolute; bottom: 0; left: 0;
+  width: 0; height: 2px; background: var(--wood);
+  transition: width 0.5s ease;
+}
+.card-3d:hover .card-3d-line { width: 100%; }
+
+/* ============================================================
+   PROCESS
+============================================================ */
+.process { background: var(--bark-mid); }
+.process-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 5rem;
+  align-items: start; margin-top: 4rem;
+}
+.process-img {
+  position: sticky; top: 6rem; aspect-ratio: 3/4;
+  background-image: url('https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?w=700&q=80');
+  background-size: cover; background-position: center;
+  overflow: hidden;
+}
+.process-img::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(28,20,16,0.5) 0%, transparent 50%);
+}
+
+.steps { display: flex; flex-direction: column; gap: 0; }
+.step {
+  display: grid; grid-template-columns: 4rem 1fr;
+  gap: 1.5rem; padding: 2rem 0;
+  border-bottom: 1px solid var(--border);
+  transition: padding-left 0.3s ease;
+  cursor: none;
+}
+.step:hover { padding-left: 0.8rem; }
+.step-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 3rem; font-weight: 300; color: rgba(139,90,43,0.25);
+  line-height: 1; transition: color 0.3s;
+}
+.step:hover .step-num { color: var(--wood); }
+.step-title {
+  font-size: 1rem; font-weight: 400; color: var(--cream);
+  margin-bottom: 0.6rem;
+}
+.step-body {
+  font-size: 0.88rem; color: rgba(247,243,238,0.5);
+  line-height: 1.7; font-weight: 300;
+}
+
+/* ============================================================
+   TESTIMONIAL
+============================================================ */
+.testimonial {
+  background: var(--bark);
+  text-align: center; padding: 8rem 5rem;
+  position: relative; overflow: hidden;
+}
+.test-bg {
+  position: absolute; inset: 0; opacity: 0.04;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 25vw; font-weight: 300; color: var(--wood);
+  display: flex; align-items: center; justify-content: center;
+  user-select: none; pointer-events: none; line-height: 1;
+}
+.test-stars {
+  font-size: 1.1rem; letter-spacing: 0.4em; color: var(--wood);
+  margin-bottom: 2rem; display: block;
+  animation: starsPulse 2s ease-in-out infinite;
+}
+@keyframes starsPulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
+.test-quote {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-style: italic; font-weight: 300;
+  color: var(--cream); max-width: 60ch; margin: 0 auto 2rem;
+  line-height: 1.4; position: relative; z-index: 1;
+}
+.test-author {
+  font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase;
+  color: rgba(247,243,238,0.35);
+}
+
+/* ============================================================
+   CONTACT / CTA
+============================================================ */
+.contact {
+  background: var(--warm);
+  display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center;
+}
+.contact .section-title,
+.contact .section-tag { color: var(--bark); }
+.contact .section-tag { color: var(--wood); }
+.contact .section-tag::before { background: var(--wood); }
+
+.contact-desc {
+  font-size: 1rem; color: var(--muted); line-height: 1.8;
+  font-weight: 300; margin-bottom: 2.5rem;
+}
+.contact-links { display: flex; flex-direction: column; gap: 1rem; }
+.contact-item {
+  display: flex; align-items: center; gap: 1.2rem;
+  padding: 1.4rem 1.6rem; background: white;
+  border: 1px solid rgba(139,90,43,0.15);
+  text-decoration: none; position: relative; overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.3s;
+}
+.contact-item::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 3px; background: var(--wood); transform: scaleY(0);
+  transition: transform 0.3s ease; transform-origin: bottom;
+}
+.contact-item:hover::before { transform: scaleY(1); }
+.contact-item:hover {
+  transform: translateX(4px);
+  box-shadow: -4px 0 20px rgba(139,90,43,0.12);
+}
+.contact-icon {
+  width: 2.5rem; height: 2.5rem; background: var(--warm);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  transition: background 0.3s;
+}
+.contact-item:hover .contact-icon { background: var(--wood); }
+.contact-icon svg {
+  width: 16px; height: 16px; stroke: var(--wood); fill: none; stroke-width: 1.5;
+  transition: stroke 0.3s;
+}
+.contact-item:hover .contact-icon svg { stroke: var(--cream); }
+.contact-label {
+  font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--wood); margin-bottom: 0.2rem;
+}
+.contact-value { font-size: 0.95rem; color: var(--bark); font-weight: 400; }
+
+.contact-map {
+  aspect-ratio: 4/5; background: var(--bark-mid); overflow: hidden;
+  position: relative;
+}
+.contact-map iframe {
+  width: 100%; height: 100%; border: none; filter: saturate(0.5) contrast(1.1);
+}
+.contact-map-overlay {
+  position: absolute; bottom: 2rem; left: 2rem;
+  background: white; padding: 1.2rem 1.5rem;
+  border-left: 3px solid var(--wood);
+}
+.map-overlay-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem; font-weight: 400; color: var(--bark);
+}
+.map-overlay-addr {
+  font-size: 0.75rem; color: var(--muted); margin-top: 0.2rem;
+}
+
+/* ============================================================
+   FOOTER
+============================================================ */
+footer {
+  background: var(--bark); border-top: 1px solid var(--border);
+  padding: 4rem 5rem;
+  display: grid; grid-template-columns: 1fr auto 1fr;
+  align-items: center; gap: 2rem;
+}
+.footer-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.3rem; font-weight: 300; color: var(--cream); letter-spacing: 0.1em;
+}
+.footer-logo span { color: var(--wood); font-style: italic; }
+.footer-center { text-align: center; }
+.footer-copy { font-size: 0.72rem; color: rgba(247,243,238,0.3); letter-spacing: 0.05em; }
+.footer-links {
+  display: flex; gap: 2rem; justify-content: flex-end; list-style: none;
+}
+.footer-links a {
+  font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: rgba(247,243,238,0.4); text-decoration: none; transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--wood); }
+
+/* ============================================================
+   MOBILE
+============================================================ */
+@media (max-width: 900px) {
+  body { cursor: auto; }
+  #cursor, #cursor-ring { display: none; }
+  nav { padding: 1.2rem 1.5rem; }
+  nav.scrolled { padding: 1rem 1.5rem; }
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+
+  section { padding: 5rem 1.5rem; }
+
+  .hero-content {
+    grid-template-columns: 1fr; padding: 0 1.5rem 7rem; gap: 2.5rem;
+  }
+  .hero-title { font-size: clamp(2.8rem, 10vw, 4.5rem); }
+  .hero-stats { gap: 2rem; }
+  .scroll-hint { display: none; }
+
+  .about { grid-template-columns: 1fr; gap: 3rem; }
+  .about-images { aspect-ratio: 4/3; }
+  .about-badge { display: none; }
+
+  .cat-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .cat-card:nth-child(1) { grid-column: 1 / 3; aspect-ratio: 16/9; }
+  .cat-card:nth-child(2) { aspect-ratio: 4/3; }
+  .cat-card:nth-child(3) { aspect-ratio: 4/3; }
+  .cat-card:nth-child(4) { aspect-ratio: 4/3; }
+  .cat-card:nth-child(5) { grid-column: 1 / 3; aspect-ratio: 16/9; }
+
+  .cards-3d { grid-template-columns: 1fr; }
+
+  .process-grid { grid-template-columns: 1fr; gap: 3rem; }
+  .process-img { display: none; }
+
+  .contact { grid-template-columns: 1fr; gap: 3rem; }
+  .contact-map { display: none; }
+
+  footer { grid-template-columns: 1fr; text-align: center; }
+  .footer-links { justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- GRAIN -->
+<div id="grain"></div>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-logo">Rohco <span>Pucón</span></div>
+  <div class="loader-line"></div>
+  <div class="loader-sub">Muebles Artesanales · Araucanía</div>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a class="nav-logo" href="#">Rohco <span>Pucón</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">Nosotros</a></li>
+    <li><a href="#catalogo">Catálogo</a></li>
+    <li><a href="#proceso">Proceso</a></li>
+    <li><a href="#contacto" class="nav-cta">Contacto</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about" onclick="closeMenu()">Nosotros</a>
+  <a href="#catalogo" onclick="closeMenu()">Catálogo</a>
+  <a href="#proceso" onclick="closeMenu()">Proceso</a>
+  <a href="#contacto" onclick="closeMenu()">Contacto</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-bg"></div>
+  <div class="hero-img-mosaic">
+    <div class="mosaic-cell"></div>
+    <div class="mosaic-cell"></div>
+    <div class="mosaic-cell"></div>
+    <div class="mosaic-cell"></div>
+    <div class="mosaic-cell"></div>
+    <div class="mosaic-cell"></div>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-left">
+      <div class="hero-tag">Mueblería Artesanal · Pucón, Araucanía</div>
+      <h1 class="hero-title">
+        <span class="line"><span>Madera que</span></span>
+        <span class="line"><span>cuenta una</span></span>
+        <span class="line"><span><em>historia.</em></span></span>
+      </h1>
+    </div>
+    <div class="hero-right">
+      <p class="hero-desc">Muebles de madera nativa fabricados con maestría y autenticidad en el corazón de la Araucanía. Cada pieza, única e irrepetible.</p>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="document.getElementById('catalogo').scrollIntoView({behavior:'smooth'})"><span>Ver catálogo</span></button>
+        <button class="btn-outline" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">Nuestra historia</button>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-num" data-count="20">0</span>
+          <span class="stat-label">años de oficio</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num" data-count="300">0</span>
+          <span class="stat-label">modelos únicos</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">4.3★</span>
+          <span class="stat-label">Google Reviews</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item">Cajoneras<span class="marquee-dot"></span></span>
+    <span class="marquee-item">Camas<span class="marquee-dot"></span></span>
+    <span class="marquee-item">Comedores<span class="marquee-dot"></span></span>
+    <span class="marquee-item">Mesas de Centro<span class="marquee-dot"></span></span>
+    <span class="marquee-item">Alacenas<span class="marquee-dot"></span></span>
+    <span class="marquee-item">Escritorios<span class="marquee-dot"></span></span>
+    <span class="marquee-item">Arrimos<span class="marquee-dot"></span></span>
+    <span class="marquee-item">Respaldos<span class="marquee-dot"></span></span>
+    <span class="marquee-item">Espejos<span class="marquee-dot"></span></span>
+    <span class="marquee-item">Racks<span class="marquee-dot"></span></span>
+    <span class="marquee-item">Baúles<span class="marquee-dot"></span></span>
+    <span class="marquee-item">Decoración<span class="marquee-dot"></span></span>
+    <span class="marquee-item">Cajoneras<span class="marquee-dot"></span></span>
+    <span class="marquee-item">Camas<span class="marquee-dot"></span></span>
+    <span class="marquee-item">Comedores<span class="marquee-dot"></span></span>
+    <span class="marquee-item">Mesas de Centro<span class="marquee-dot"></span></span>
+    <span class="marquee-item">Alacenas<span class="marquee-dot"></span></span>
+    <span class="marquee-item">Escritorios<span class="marquee-dot"></span></span>
+    <span class="marquee-item">Arrimos<span class="marquee-dot"></span></span>
+    <span class="marquee-item">Respaldos<span class="marquee-dot"></span></span>
+    <span class="marquee-item">Espejos<span class="marquee-dot"></span></span>
+    <span class="marquee-item">Racks<span class="marquee-dot"></span></span>
+    <span class="marquee-item">Baúles<span class="marquee-dot"></span></span>
+    <span class="marquee-item">Decoración<span class="marquee-dot"></span></span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="about-images reveal-left">
+    <div class="about-img-main"></div>
+    <div class="about-img-accent"></div>
+    <div class="about-badge">
+      <span class="about-badge-num">+20</span>
+      <span class="about-badge-label">años de oficio</span>
+    </div>
+  </div>
+  <div class="reveal-right">
+    <div class="section-tag">Nuestra identidad</div>
+    <h2 class="section-title">Artesanía de la<br>región, hecha con<br><em>orgullo</em></h2>
+    <p class="about-body">En Rohco llevamos décadas convirtiendo madera nativa de la Araucanía en muebles que duran generaciones. <strong>Cada pieza es fabricada a mano</strong> en nuestro taller en Pucón, respetando los procesos tradicionales que dan vida a la madera.</p>
+    <div class="about-features">
+      <div class="feature">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        </div>
+        <div>
+          <div class="feature-title">Madera nativa de la Araucanía</div>
+          <div class="feature-desc">Seleccionamos cada tronco con criterio artesanal y respeto por el entorno.</div>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+        </div>
+        <div>
+          <div class="feature-title">Fabricación a pedido</div>
+          <div class="feature-desc">Adaptamos diseños a tus medidas y espacios sin costo adicional.</div>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+        <div>
+          <div class="feature-title">Calidad garantizada</div>
+          <div class="feature-desc">Muebles hechos para durar décadas, no temporadas.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<section class="categories" id="catalogo">
+  <div class="cat-header reveal">
+    <div>
+      <div class="section-tag">Catálogo</div>
+      <h2 class="section-title">Explora nuestras<br><em>colecciones</em></h2>
+    </div>
+    <a class="view-all" href="https://catalogo.rohco.cl/catalogo/" target="_blank">Ver todo →</a>
+  </div>
+  <div class="cat-grid">
+    <div class="cat-card reveal">
+      <div class="cat-bg" style="background-image:url('https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=900&q=80')"></div>
+      <div class="cat-overlay"></div>
+      <div class="cat-content">
+        <div class="cat-name">Comedores</div>
+        <div class="cat-count">45 modelos</div>
+      </div>
+      <div class="cat-arrow"><svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+    </div>
+    <div class="cat-card reveal">
+      <div class="cat-bg" style="background-image:url('https://images.unsplash.com/photo-1538688525198-9b88f6f53126?w=600&q=80')"></div>
+      <div class="cat-overlay"></div>
+      <div class="cat-content">
+        <div class="cat-name">Camas</div>
+        <div class="cat-count">12 modelos</div>
+      </div>
+      <div class="cat-arrow"><svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+    </div>
+    <div class="cat-card reveal">
+      <div class="cat-bg" style="background-image:url('https://images.unsplash.com/photo-1489171078254-c3365d6e359f?w=600&q=80')"></div>
+      <div class="cat-overlay"></div>
+      <div class="cat-content">
+        <div class="cat-name">Cajoneras</div>
+        <div class="cat-count">43 modelos</div>
+      </div>
+      <div class="cat-arrow"><svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+    </div>
+    <div class="cat-card reveal">
+      <div class="cat-bg" style="background-image:url('https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?w=600&q=80')"></div>
+      <div class="cat-overlay"></div>
+      <div class="cat-content">
+        <div class="cat-name">Mesas de Centro</div>
+        <div class="cat-count">54 modelos</div>
+      </div>
+      <div class="cat-arrow"><svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+    </div>
+    <div class="cat-card reveal">
+      <div class="cat-bg" style="background-image:url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=900&q=80')"></div>
+      <div class="cat-overlay"></div>
+      <div class="cat-content">
+        <div class="cat-name">Alacenas</div>
+        <div class="cat-count">26 modelos</div>
+      </div>
+      <div class="cat-arrow"><svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED CARDS 3D -->
+<section class="featured">
+  <div class="reveal">
+    <div class="section-tag">Piezas destacadas</div>
+    <h2 class="section-title" style="color:var(--bark)">Lo más <em>solicitado</em></h2>
+  </div>
+  <div class="cards-3d">
+    <div class="card-3d" id="c3d-1">
+      <div class="card-3d-img" style="background-image:url('https://images.unsplash.com/photo-1489171078254-c3365d6e359f?w=500&q=80')"></div>
+      <span class="card-3d-num">01 / Dormitorio</span>
+      <div class="card-3d-title">Cajoneras de madera</div>
+      <p class="card-3d-desc">43 modelos disponibles en distintos acabados y tamaños. Madera nativa tratada al aceite.</p>
+      <div class="card-3d-line"></div>
+    </div>
+    <div class="card-3d" id="c3d-2">
+      <div class="card-3d-img" style="background-image:url('https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=500&q=80')"></div>
+      <span class="card-3d-num">02 / Comedor</span>
+      <div class="card-3d-title">Mesas de comedor</div>
+      <p class="card-3d-desc">Desde 4 hasta 12 personas. Diseño artesanal con opciones de extensión a medida.</p>
+      <div class="card-3d-line"></div>
+    </div>
+    <div class="card-3d" id="c3d-3">
+      <div class="card-3d-img" style="background-image:url('https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?w=500&q=80')"></div>
+      <span class="card-3d-num">03 / Living</span>
+      <div class="card-3d-title">Mesas de centro</div>
+      <p class="card-3d-desc">54 modelos con diseños modernos y rústicos. Personalizables en dimensiones y terminaciones.</p>
+      <div class="card-3d-line"></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process" id="proceso">
+  <div class="reveal">
+    <div class="section-tag">El proceso</div>
+    <h2 class="section-title">Desde el árbol<br>hasta tu <em>hogar</em></h2>
+  </div>
+  <div class="process-grid">
+    <div class="process-img reveal-left"></div>
+    <div class="steps reveal-right">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div>
+          <div class="step-title">Selección de madera</div>
+          <div class="step-body">Elegimos madera nativa de calidad superior, secada en cámara para garantizar estabilidad dimensional y durabilidad.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div>
+          <div class="step-title">Diseño y trazado</div>
+          <div class="step-body">Cada pieza se diseña respetando la veta y estructura natural de la madera, maximizando su belleza.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div>
+          <div class="step-title">Fabricación artesanal</div>
+          <div class="step-body">Nuestros maestros carpinteros trabajan cada unión y detalle con técnicas tradicionales heredadas por generaciones.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div>
+          <div class="step-title">Acabado premium</div>
+          <div class="step-body">Laca, barniz o aceite natural según preferencia. Control de calidad en cada etapa del proceso.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">05</div>
+        <div>
+          <div class="step-title">Entrega en Pucón</div>
+          <div class="step-body">Retiro directo desde nuestro taller o coordinamos entrega. Instalación disponible en la zona.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIAL -->
+<section class="testimonial reveal">
+  <div class="test-bg">"</div>
+  <span class="test-stars">★ ★ ★ ★ ★</span>
+  <p class="test-quote">"Muebles de la región hechos con maestría y autenticidad. Muy buena calidad — se nota que cada pieza fue hecha con orgullo y dedicación."</p>
+  <div class="test-author">Cliente verificado · Google Reviews · Pucón, Chile</div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contacto">
+  <div class="reveal-left">
+    <div class="section-tag">Visítanos</div>
+    <h2 class="section-title">Hablemos de tu<br><em>próximo mueble</em></h2>
+    <p class="contact-desc">Estamos en el Camino Internacional de Pucón. Visítanos, llámanos o escríbenos para consultas y pedidos a medida.</p>
+    <div class="contact-links">
+      <a class="contact-item" href="tel:+56452441382">
+        <div class="contact-icon">
+          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8a19.79 19.79 0 01-3.07-8.68A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92v2z"/></svg>
+        </div>
+        <div>
+          <div class="contact-label">Teléfono</div>
+          <div class="contact-value">(45) 244 1382</div>
+        </div>
+      </a>
+      <a class="contact-item" href="https://maps.google.com/?q=Rohco+Pucon+Muebles" target="_blank">
+        <div class="contact-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <div>
+          <div class="contact-label">Dirección</div>
+          <div class="contact-value">Cam. Internacional 1625, Pucón</div>
+        </div>
+      </a>
+      <a class="contact-item" href="http://www.rohco.cl/" target="_blank">
+        <div class="contact-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+        </div>
+        <div>
+          <div class="contact-label">Sitio web</div>
+          <div class="contact-value">rohco.cl · catalogo.rohco.cl</div>
+        </div>
+      </a>
+      <a class="contact-item" href="https://www.google.com/maps/place/Rohco+Puc%C3%B3n+Muebles" target="_blank">
+        <div class="contact-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+        </div>
+        <div>
+          <div class="contact-label">Google Maps</div>
+          <div class="contact-value">Ver en el mapa →</div>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="contact-map reveal-right">
+    <iframe
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3096.123!2d-71.97!3d-39.28!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9614"
+      loading="lazy">
+    </iframe>
+    <div class="contact-map-overlay">
+      <div class="map-overlay-name">Rohco Pucón Muebles</div>
+      <div class="map-overlay-addr">Cam. Internacional 1625, Pucón · 4.3★</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Rohco <span>Pucón</span></div>
+  <div class="footer-center">
+    <div class="footer-copy">© 2026 Rohco Pucón Muebles · Araucanía, Chile</div>
+  </div>
+  <ul class="footer-links">
+    <li><a href="#catalogo">Catálogo</a></li>
+    <li><a href="#proceso">Proceso</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
+</footer>
+
+<script>
+/* ---- LOADER ---- */
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('loader').classList.add('hide');
+    setTimeout(() => document.getElementById('loader').remove(), 900);
+  }, 2000);
+});
+
+/* ---- CURSOR ---- */
+const cur = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+
+function animCursor() {
+  cur.style.left = mx + 'px';
+  cur.style.top = my + 'px';
+  rx += (mx - rx) * 0.12;
+  ry += (my - ry) * 0.12;
+  ring.style.left = rx + 'px';
+  ring.style.top = ry + 'px';
+  requestAnimationFrame(animCursor);
+}
+animCursor();
+
+document.querySelectorAll('a,button,.cat-card,.card-3d,.step,.feature').forEach(el => {
+  el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+  el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+});
+
+/* ---- NAV SCROLL ---- */
+window.addEventListener('scroll', () => {
+  document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 60);
+});
+
+/* ---- HAMBURGER ---- */
+const ham = document.getElementById('hamburger');
+const mob = document.getElementById('mobileMenu');
+ham.addEventListener('click', () => {
+  ham.classList.toggle('open');
+  mob.classList.toggle('open');
+});
+function closeMenu() {
+  ham.classList.remove('open');
+  mob.classList.remove('open');
+}
+
+/* ---- SCROLL REVEAL ---- */
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => {
+  observer.observe(el);
+  // stagger children
+  el.querySelectorAll('.feature, .step, .card-3d').forEach((c, i) => {
+    c.style.transitionDelay = (i * 0.1) + 's';
+  });
+});
+
+/* ---- COUNTER ANIMATION ---- */
+function animCount(el, target, suffix='') {
+  let start = 0;
+  const dur = 1800;
+  const step = timestamp => {
+    if (!start) start = timestamp;
+    const progress = Math.min((timestamp - start) / dur, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    el.textContent = Math.round(eased * target) + (progress === 1 ? (suffix || '') : '');
+    if (progress < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+const statsObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      document.querySelectorAll('[data-count]').forEach(el => {
+        animCount(el, parseInt(el.dataset.count), el.dataset.count === '20' ? '+' : '+');
+      });
+      statsObs.disconnect();
+    }
+  });
+}, { threshold: 0.5 });
+const statsEl = document.querySelector('.hero-stats');
+if (statsEl) statsObs.observe(statsEl);
+
+/* ---- 3D CARD TILT ---- */
+document.querySelectorAll('.card-3d').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const rect = card.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    card.style.transform = `perspective(800px) rotateY(${x * 12}deg) rotateX(${-y * 12}deg) translateZ(10px)`;
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = 'perspective(800px) rotateY(0deg) rotateX(0deg) translateZ(0)';
+    card.style.transition = 'transform 0.5s ease';
+  });
+  card.addEventListener('mouseenter', () => { card.style.transition = 'transform 0.1s'; });
+});
+
+/* ---- HERO CANVAS (animated wood lines) ---- */
+const canvas = document.getElementById('hero-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, lines = [];
+
+function resizeCanvas() {
+  W = canvas.width = canvas.offsetWidth;
+  H = canvas.height = canvas.offsetHeight;
+  lines = [];
+  for (let i = 0; i < 18; i++) {
+    lines.push({
+      y: Math.random() * H,
+      speed: 0.15 + Math.random() * 0.3,
+      opacity: 0.3 + Math.random() * 0.7,
+      width: 0.5 + Math.random() * 1.5,
+      amplitude: 20 + Math.random() * 40,
+      freq: 0.003 + Math.random() * 0.004,
+      phase: Math.random() * Math.PI * 2
+    });
+  }
+}
+
+function drawCanvas(t) {
+  ctx.clearRect(0, 0, W, H);
+  lines.forEach(l => {
+    l.phase += 0.003;
+    ctx.beginPath();
+    ctx.strokeStyle = `rgba(139,90,43,${l.opacity})`;
+    ctx.lineWidth = l.width;
+    for (let x = 0; x <= W; x += 4) {
+      const y = l.y + Math.sin(x * l.freq + l.phase) * l.amplitude;
+      x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    l.y += l.speed;
+    if (l.y > H + 50) l.y = -50;
+  });
+  requestAnimationFrame(drawCanvas);
+}
+
+resizeCanvas();
+requestAnimationFrame(drawCanvas);
+window.addEventListener('resize', resizeCanvas);
+
+/* ---- PARALLAX HERO MOSAIC ---- */
+window.addEventListener('scroll', () => {
+  const s = window.scrollY;
+  const mosaic = document.querySelector('.hero-img-mosaic');
+  if (mosaic) mosaic.style.transform = `translateY(${s * 0.25}px)`;
+});
+</script>
+</body>
+</html>
